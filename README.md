@@ -14,6 +14,7 @@
 
 - 写下一件今天的小事（200 字以内）
 - 自动生成博物馆展品（标题、展厅、材质、展签、策展人笔记）
+- 支持 MiMo AI 生成（可选），无 API key 时自动使用本地模板
 - 预览展品，不满意可以换一种呈现
 - 保存到个人博物馆墙
 - 点击展品查看完整详情
@@ -40,9 +41,10 @@
 - **框架：** Next.js 16 (App Router)
 - **UI：** React 19 + Tailwind CSS v4
 - **语言：** TypeScript
+- **AI：** MiMo（Xiaomi Token Plan，OpenAI 兼容接口，可选）
 - **存储：** 浏览器 localStorage
 - **部署：** Vercel
-- **PWA：** Web App Manifest（可安装到主屏幕）
+- **PWA：** Web App Manifest + Service Worker
 
 ## 本地运行
 
@@ -59,6 +61,48 @@ npm run dev
 ```
 
 打开 http://localhost:3000。
+
+不设置 MiMo 环境变量时，应用会使用本地模板生成展品，完全可正常运行。
+
+## AI 生成配置（可选）
+
+应用支持使用 MiMo AI 生成更个性化的展品文案。不配置时自动使用本地模板。
+
+### 本地开发
+
+复制 `.env.example` 为 `.env.local`，填入你的 API key：
+
+```bash
+cp .env.example .env.local
+```
+
+编辑 `.env.local`：
+
+```
+MIMO_API_KEY=your-api-key-here
+MIMO_BASE_URL=https://token-plan-cn.xiaomimimo.com/v1
+MIMO_MODEL=mimo-v2.5-pro
+```
+
+**重要：** 不要使用 `NEXT_PUBLIC_` 前缀。API key 只在服务端使用，不会暴露给浏览器。
+
+### Vercel 部署
+
+在 Vercel 项目设置中添加环境变量：
+
+- `MIMO_API_KEY` — 你的 MiMo API key
+- `MIMO_BASE_URL` — `https://token-plan-cn.xiaomimimo.com/v1`
+- `MIMO_MODEL` — `mimo-v2.5-pro`
+
+添加后重新部署即可生效。
+
+### 行为说明
+
+- 有 API key 时：调用 MiMo AI 生成展品文案
+- 无 API key 时：使用本地随机模板生成（默认行为）
+- API 调用失败时：自动回退到本地模板，并显示提示"这次先用本地展签生成。"
+- 用户输入的小成就会发送到 MiMo API（仅在 AI 生成启用时）
+- 已保存的展品始终在浏览器 localStorage 中，不依赖 AI 服务
 
 ## 部署
 
@@ -119,18 +163,22 @@ app/
   preview/page.tsx      — 展品预览
   museum/page.tsx       — 博物馆墙 + 详情弹窗 + 删除确认
   opengraph-image.tsx   — 动态 OG 分享图片
+  api/
+    generate-exhibit/
+      route.ts          — MiMo AI 展品生成 API
 components/
   service-worker-register.tsx — Service Worker 注册
 lib/
   storage.ts            — localStorage 读写
   galleries.ts          — 展厅分类和关键词匹配
   templates.ts          — 展品文案模板池
-  exhibit-generator.ts  — 展品生成（随机组合模板）
+  exhibit-generator.ts  — 展品生成（本地随机模板）
 types/
   exhibit.ts            — 类型定义
 docs/
   MANUAL_QA.md          — 手动测试指南
   PWA_CHECKLIST.md      — PWA 安装验证清单
+.env.example            — 环境变量模板
 ```
 
 ## 已知限制
@@ -138,7 +186,8 @@ docs/
 - 数据仅存在于当前浏览器，清除缓存会丢失所有展品
 - 不支持导出展品
 - 不支持编辑已保存的展品
-- 展品文案基于随机模板，不使用 AI
+- AI 生成需要 MiMo API key，无 key 时使用本地模板
+- 用户输入的小成就会发送到 MiMo API（仅在 AI 启用时）
 - 无深色模式
 - 无跨设备同步
 
@@ -148,7 +197,7 @@ docs/
 2. **v0.5** — PWA 基础：manifest、图标、可安装到主屏幕
 3. **v0.5.1** — PWA 兼容性：PNG 图标回退、安装验证清单
 4. **v0.6** — 离线支持：Service Worker 缓存应用外壳
-5. **v0.7** — AI 生成展品：可选的 AI 模板，让展品更个性化
+5. **v0.7** — AI 生成展品：MiMo AI 可选集成，本地模板兜底
 6. **v1.0** — 云端同步 + 应用打包
 
 ## License

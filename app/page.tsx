@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { generateExhibit } from "@/lib/exhibit-generator";
+import { Exhibit } from "@/types/exhibit";
+import { getNextExhibitNumber } from "@/lib/storage";
 
 export default function HomePage() {
   const [input, setInput] = useState("");
@@ -25,12 +27,53 @@ export default function HomePage() {
     setIsGenerating(true);
     setError("");
 
+    const trimmed = input.trim();
+
     try {
-      const exhibit = generateExhibit(input.trim());
+      // Try AI generation first
+      const res = await fetch("/api/generate-exhibit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: trimmed }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+
+        if (data.source === "ai" && data.exhibit) {
+          // AI generation succeeded
+          const exhibit: Exhibit = {
+            id: crypto.randomUUID(),
+            exhibitNumber: getNextExhibitNumber(),
+            title: data.exhibit.title,
+            gallery: data.exhibit.gallery,
+            materials: Array.isArray(data.exhibit.materials)
+              ? data.exhibit.materials.join("、")
+              : data.exhibit.materials,
+            date: new Date().toISOString().split("T")[0],
+            museumLabel: data.exhibit.museumLabel,
+            curatorNote: data.exhibit.curatorNote,
+            rawInput: trimmed,
+            createdAt: new Date().toISOString(),
+          };
+          sessionStorage.setItem("current-exhibit", JSON.stringify(exhibit));
+          sessionStorage.removeItem("exhibit-fallback");
+          router.push("/preview");
+          return;
+        }
+      }
+
+      // Fallback to local generation
+      const exhibit = generateExhibit(trimmed);
       sessionStorage.setItem("current-exhibit", JSON.stringify(exhibit));
+      sessionStorage.setItem("exhibit-fallback", "true");
       router.push("/preview");
     } catch {
-      setError("展品生成遇到了一点问题，请再试一次。");
+      // Fallback to local generation
+      const exhibit = generateExhibit(trimmed);
+      sessionStorage.setItem("current-exhibit", JSON.stringify(exhibit));
+      sessionStorage.setItem("exhibit-fallback", "true");
+      router.push("/preview");
     } finally {
       setIsGenerating(false);
     }

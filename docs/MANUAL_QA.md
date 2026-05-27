@@ -1,6 +1,6 @@
 # The Unapplauded — 手动测试指南
 
-版本：v0.2 local prototype
+版本：v0.7
 
 ## 测试环境
 
@@ -161,12 +161,39 @@ npm run dev
 
 ---
 
+### 10. AI 生成测试
+
+| 场景 | 步骤 | 预期结果 |
+|------|------|---------|
+| 无环境变量 | 不设置 MIMO_API_KEY，启动应用 | 使用本地模板生成，正常工作 |
+| 有环境变量 | 设置 MIMO_API_KEY，启动应用 | 调用 MiMo AI 生成展品 |
+| API key 无效 | 设置错误的 MIMO_API_KEY | 自动回退到本地模板，显示"这次先用本地展签生成。" |
+| API 地址无效 | 设置错误的 MIMO_BASE_URL | 自动回退到本地模板 |
+| 空输入 | 不输入内容，点"生成展品" | 显示"写点什么吧，哪怕很小的事。" |
+| 超长输入 | 输入超过 200 字 | 无法继续输入 |
+| 重复生成 | 多次点"换一种呈现" | 每次使用本地模板随机生成 |
+| 保存 AI 展品 | 用 AI 生成后点"放入博物馆" | 展品正常保存到 localStorage |
+| 保存本地展品 | 用本地模板生成后点"放入博物馆" | 展品正常保存到 localStorage |
+| Vercel 环境变量 | 在 Vercel 设置中添加 MIMO_* 变量 | 部署后 AI 生成生效 |
+
+### 11. Vercel 环境变量检查
+
+在 Vercel 项目设置 → Environment Variables 中确认：
+
+- [ ] `MIMO_API_KEY` 已设置（不使用 NEXT_PUBLIC_ 前缀）
+- [ ] `MIMO_BASE_URL` 设置为 `https://token-plan-cn.xiaomimimo.com/v1`
+- [ ] `MIMO_MODEL` 设置为 `mimo-v2.5-pro`
+- [ ] 重新部署后 AI 生成正常工作
+
+---
+
 ## 已知限制
 
 - 数据仅存在于当前浏览器的 localStorage
 - 清除浏览器缓存会丢失所有展品
 - 不支持编辑已保存的展品
 - 不支持导出展品
-- 展品文案基于随机模板，不使用 AI
+- AI 生成需要 MiMo API key，无 key 时使用本地模板
+- 用户输入的小成就会发送到 MiMo API（仅在 AI 启用时）
 - 无深色模式
 - 无跨设备同步

@@ -15,6 +15,10 @@ export default function PreviewPage() {
   });
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [fallbackUsed, setFallbackUsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return sessionStorage.getItem("exhibit-fallback") === "true";
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -44,6 +48,8 @@ export default function PreviewPage() {
     const newExhibit = generateExhibit(exhibit.rawInput);
     setExhibit(newExhibit);
     sessionStorage.setItem("current-exhibit", JSON.stringify(newExhibit));
+    setFallbackUsed(false);
+    sessionStorage.removeItem("exhibit-fallback");
   };
 
   if (!exhibit) {
@@ -97,6 +103,11 @@ export default function PreviewPage() {
           <p className="text-secondary text-xs sm:text-sm mt-1">
             你的小事，变成了这个
           </p>
+          {fallbackUsed && (
+            <p className="text-secondary/60 text-xs mt-2">
+              这次先用本地展签生成。
+            </p>
+          )}
         </div>
 
         <div className="bg-card border border-border rounded-lg p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6">
