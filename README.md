@@ -103,6 +103,32 @@ npm run lint     # 代码检查
 - 无深色模式
 - 无跨设备同步
 
+## 部署到 Vercel
+
+所有页面都是静态预渲染的，可以直接部署到 Vercel，无需服务器。
+
+```bash
+# 1. 安装 Vercel CLI（如果没有）
+npm i -g vercel
+
+# 2. 登录
+vercel login
+
+# 3. 部署（首次会引导项目设置）
+vercel
+
+# 4. 部署到生产环境
+vercel --prod
+```
+
+或者将 GitHub 仓库连接到 [vercel.com](https://vercel.com)，每次 push 自动部署。
+
+**公开演示注意事项：**
+- 展品数据存储在访问者的浏览器 localStorage 中
+- 不同设备、不同浏览器之间的数据不互通
+- 清除浏览器缓存会丢失所有数据
+- 这是设计选择，不是 bug
+
 ## 路线图
 
 1. **Vercel 部署** — 线上演示，朋友可以试用

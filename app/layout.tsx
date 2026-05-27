@@ -24,8 +24,12 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The Unapplauded",
-  description: "一个存放小事的地方",
+  title: "The Unapplauded — 一个存放小事的地方",
+  description:
+    "把日常的小事变成博物馆展品。写下来，生成展品，放进你的私人博物馆。",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
