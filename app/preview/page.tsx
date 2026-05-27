@@ -42,14 +42,53 @@ export default function PreviewPage() {
     }
   };
 
-  const handleRegenerate = () => {
+  const handleRegenerate = async () => {
     if (!exhibit) return;
 
-    const newExhibit = generateExhibit(exhibit.rawInput);
+    const rawInput = exhibit.rawInput;
+
+    try {
+      const res = await fetch("/api/generate-exhibit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: rawInput, regenerate: true }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+
+        if (data.source === "ai" && data.exhibit) {
+          const newExhibit: Exhibit = {
+            id: crypto.randomUUID(),
+            exhibitNumber: exhibit.exhibitNumber,
+            title: data.exhibit.title,
+            gallery: data.exhibit.gallery,
+            materials: Array.isArray(data.exhibit.materials)
+              ? data.exhibit.materials.join("、")
+              : data.exhibit.materials,
+            date: exhibit.date,
+            museumLabel: data.exhibit.museumLabel,
+            curatorNote: data.exhibit.curatorNote,
+            rawInput,
+            createdAt: new Date().toISOString(),
+          };
+          setExhibit(newExhibit);
+          sessionStorage.setItem("current-exhibit", JSON.stringify(newExhibit));
+          setFallbackUsed(false);
+          sessionStorage.removeItem("exhibit-fallback");
+          return;
+        }
+      }
+    } catch {
+      // fall through to local
+    }
+
+    // Fallback to local generation
+    const newExhibit = generateExhibit(rawInput);
     setExhibit(newExhibit);
     sessionStorage.setItem("current-exhibit", JSON.stringify(newExhibit));
-    setFallbackUsed(false);
-    sessionStorage.removeItem("exhibit-fallback");
+    setFallbackUsed(true);
+    sessionStorage.setItem("exhibit-fallback", "true");
   };
 
   if (!exhibit) {
