@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     "写下一件今天的小事，它会被变成一件博物馆展品。一个安静的个人博物馆，收藏日常的小胜利。",
   icons: {
     icon: "/favicon.svg",
-    apple: "/icon-192.svg",
+    apple: "/apple-touch-icon.png",
   },
   appleWebApp: {
     capable: true,

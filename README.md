@@ -90,7 +90,11 @@ The Unapplauded 支持作为 PWA 安装到主屏幕：
 
 安装后可以像原生应用一样打开，有独立的启动画面和图标。
 
-注意：PWA 基础功能已就绪（manifest + icons）。离线缓存和 Service Worker 尚未添加，需要网络连接才能使用。
+v0.5.1 增加了 PNG 图标回退，提升各浏览器 PWA 兼容性。
+
+注意：应用可安装但不支持离线使用。数据仍保存在浏览器 localStorage 中，清除浏览器数据会丢失展品。
+
+详细的安装验证步骤见 [docs/PWA_CHECKLIST.md](docs/PWA_CHECKLIST.md)。
 
 ## 数据存储
 
@@ -123,6 +127,7 @@ types/
   exhibit.ts            — 类型定义
 docs/
   MANUAL_QA.md          — 手动测试指南
+  PWA_CHECKLIST.md      — PWA 安装验证清单
 ```
 
 ## 已知限制
@@ -138,9 +143,10 @@ docs/
 
 1. **v0.4** — 公开展示版：优化首页、空状态、OG 分享、footer
 2. **v0.5** — PWA 基础：manifest、图标、可安装到主屏幕
-3. **v0.6** — 离线支持：Service Worker + 缓存策略
-4. **v0.7** — AI 生成展品：可选的 AI 模板，让展品更个性化
-5. **v1.0** — 云端同步 + 应用打包
+3. **v0.5.1** — PWA 兼容性：PNG 图标回退、安装验证清单
+4. **v0.6** — 离线支持：Service Worker + 缓存策略
+5. **v0.7** — AI 生成展品：可选的 AI 模板，让展品更个性化
+6. **v1.0** — 云端同步 + 应用打包
 
 ## License
 
