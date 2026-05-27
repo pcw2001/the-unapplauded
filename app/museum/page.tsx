@@ -142,7 +142,7 @@ export default function MuseumPage() {
                 博物馆还没有展品
               </h2>
               <p className="text-secondary max-w-md mx-auto">
-                每件展品都从一件小事开始。
+                这里还是空的。
               </p>
             </div>
             <Link
