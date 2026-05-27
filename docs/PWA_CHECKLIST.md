@@ -2,6 +2,20 @@
 
 版本：v0.6
 
+## 验证结果
+
+**v0.6 manual test — PASSED**
+
+验证时间：2026-05-27
+
+| 测试项 | 结果 |
+|--------|------|
+| Service Worker 注册 | ✅ activated and running |
+| Cache Storage | ✅ `unapplauded-v0.6` 存在 |
+| 首页离线加载 | ✅ 从缓存加载成功 |
+| /museum 离线访问 | ✅ 正常加载 |
+| localStorage 展品 | ✅ 离线状态下仍然可见 |
+
 ## 前置条件
 
 确保应用已部署到 HTTPS 环境（如 Vercel）。PWA 要求 HTTPS。
