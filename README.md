@@ -42,6 +42,7 @@
 - **语言：** TypeScript
 - **存储：** 浏览器 localStorage
 - **部署：** Vercel
+- **PWA：** Web App Manifest（可安装到主屏幕）
 
 ## 本地运行
 
@@ -79,6 +80,18 @@ vercel --prod
 
 或将 GitHub 仓库连接到 [vercel.com](https://vercel.com)，每次 push 自动部署。
 
+## PWA
+
+The Unapplauded 支持作为 PWA 安装到主屏幕：
+
+- **iOS Safari：** 分享按钮 → 添加到主屏幕
+- **Android Chrome：** 菜单 → 安装应用
+- **桌面 Chrome：** 地址栏右侧的安装图标
+
+安装后可以像原生应用一样打开，有独立的启动画面和图标。
+
+注意：PWA 基础功能已就绪（manifest + icons）。离线缓存和 Service Worker 尚未添加，需要网络连接才能使用。
+
 ## 数据存储
 
 所有展品保存在浏览器的 `localStorage` 中：
@@ -96,6 +109,7 @@ vercel --prod
 ```
 app/
   layout.tsx            — 根布局（字体、全局样式、footer）
+  manifest.ts           — PWA manifest
   page.tsx              — 首页（输入小事）
   preview/page.tsx      — 展品预览
   museum/page.tsx       — 博物馆墙 + 详情弹窗 + 删除确认
@@ -123,9 +137,10 @@ docs/
 ## 路线图
 
 1. **v0.4** — 公开展示版：优化首页、空状态、OG 分享、footer
-2. **v0.5** — PWA 支持：添加到主屏幕，离线可用
-3. **v0.6** — AI 生成展品：可选的 AI 模板，让展品更个性化
-4. **v1.0** — 云端同步 + 应用打包
+2. **v0.5** — PWA 基础：manifest、图标、可安装到主屏幕
+3. **v0.6** — 离线支持：Service Worker + 缓存策略
+4. **v0.7** — AI 生成展品：可选的 AI 模板，让展品更个性化
+5. **v1.0** — 云端同步 + 应用打包
 
 ## License
 

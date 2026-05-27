@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Noto_Serif_SC, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -23,6 +23,10 @@ const jetbrainsMono = JetBrains_Mono({
   preload: false,
 });
 
+export const viewport: Viewport = {
+  themeColor: "#2C2C2C",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://the-unapplauded.vercel.app"),
   title: "The Unapplauded — A Museum for Ordinary Victories",
@@ -30,7 +34,14 @@ export const metadata: Metadata = {
     "写下一件今天的小事，它会被变成一件博物馆展品。一个安静的个人博物馆，收藏日常的小胜利。",
   icons: {
     icon: "/favicon.svg",
+    apple: "/icon-192.svg",
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Unapplauded",
+  },
+  applicationName: "The Unapplauded",
   openGraph: {
     title: "The Unapplauded",
     description: "A museum for ordinary victories. 写下一件今天的小事，它会被变成一件博物馆展品。",
