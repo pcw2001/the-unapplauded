@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Serif_SC, Inter, JetBrains_Mono } from "next/font/google";
+import ServiceWorkerRegister from "@/components/service-worker-register";
 import "./globals.css";
 
 const notoSerifSC = Noto_Serif_SC({
@@ -68,6 +69,7 @@ export default function RootLayout({
       className={`${notoSerifSC.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
+        <ServiceWorkerRegister />
         {children}
         <footer className="py-6 sm:py-8 text-center text-secondary/60 text-xs space-y-1">
           <p>

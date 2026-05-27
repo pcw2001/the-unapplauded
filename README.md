@@ -91,10 +91,11 @@ The Unapplauded 支持作为 PWA 安装到主屏幕：
 安装后可以像原生应用一样打开，有独立的启动画面和图标。
 
 v0.5.1 增加了 PNG 图标回退，提升各浏览器 PWA 兼容性。
+v0.6 增加了基础 Service Worker 离线支持——应用外壳可以离线加载。
 
-注意：应用可安装但不支持离线使用。数据仍保存在浏览器 localStorage 中，清除浏览器数据会丢失展品。
+离线支持范围有限：应用页面和静态资源可离线访问，但创建新展品需要网络连接。已保存的展品始终在浏览器 localStorage 中，不依赖网络。
 
-详细的安装验证步骤见 [docs/PWA_CHECKLIST.md](docs/PWA_CHECKLIST.md)。
+详细的安装验证和离线测试步骤见 [docs/PWA_CHECKLIST.md](docs/PWA_CHECKLIST.md)。
 
 ## 数据存储
 
@@ -118,6 +119,8 @@ app/
   preview/page.tsx      — 展品预览
   museum/page.tsx       — 博物馆墙 + 详情弹窗 + 删除确认
   opengraph-image.tsx   — 动态 OG 分享图片
+components/
+  service-worker-register.tsx — Service Worker 注册
 lib/
   storage.ts            — localStorage 读写
   galleries.ts          — 展厅分类和关键词匹配
@@ -144,7 +147,7 @@ docs/
 1. **v0.4** — 公开展示版：优化首页、空状态、OG 分享、footer
 2. **v0.5** — PWA 基础：manifest、图标、可安装到主屏幕
 3. **v0.5.1** — PWA 兼容性：PNG 图标回退、安装验证清单
-4. **v0.6** — 离线支持：Service Worker + 缓存策略
+4. **v0.6** — 离线支持：Service Worker 缓存应用外壳
 5. **v0.7** — AI 生成展品：可选的 AI 模板，让展品更个性化
 6. **v1.0** — 云端同步 + 应用打包
 
