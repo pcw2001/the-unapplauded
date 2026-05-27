@@ -137,12 +137,16 @@ export default function MuseumPage() {
                 <div className="w-12 h-8 border-b-2 border-secondary/30"></div>
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <h2 className="text-xl font-serif text-foreground">
                 博物馆还没有展品
               </h2>
-              <p className="text-secondary max-w-md mx-auto">
-                展厅还没有展品。第一件可以很小。
+              <p className="text-secondary max-w-md mx-auto leading-relaxed">
+                每一件小事都值得被收起来。
+                <br />
+                给自己煮了一碗面、终于回了那条消息、今天没有发脾气——
+                <br />
+                这些都是你的展品。
               </p>
             </div>
             <Link

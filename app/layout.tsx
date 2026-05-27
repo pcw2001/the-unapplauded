@@ -24,11 +24,25 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The Unapplauded — 一个存放小事的地方",
+  metadataBase: new URL("https://the-unapplauded.vercel.app"),
+  title: "The Unapplauded — A Museum for Ordinary Victories",
   description:
-    "把日常的小事变成博物馆展品。写下来，生成展品，放进你的私人博物馆。",
+    "写下一件今天的小事，它会被变成一件博物馆展品。一个安静的个人博物馆，收藏日常的小胜利。",
   icons: {
     icon: "/favicon.svg",
+  },
+  openGraph: {
+    title: "The Unapplauded",
+    description: "A museum for ordinary victories. 写下一件今天的小事，它会被变成一件博物馆展品。",
+    url: "https://the-unapplauded.vercel.app",
+    siteName: "The Unapplauded",
+    locale: "zh_CN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Unapplauded",
+    description: "A museum for ordinary victories. 写下一件今天的小事，它会被变成一件博物馆展品。",
   },
 };
 
@@ -44,6 +58,24 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         {children}
+        <footer className="py-6 sm:py-8 text-center text-secondary/60 text-xs space-y-1">
+          <p>
+            The Unapplauded · v0.4
+          </p>
+          <p>
+            A museum for ordinary victories.
+          </p>
+          <p>
+            <a
+              href="https://github.com/pcw2001/the-unapplauded"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-secondary transition-colors underline underline-offset-2"
+            >
+              GitHub
+            </a>
+          </p>
+        </footer>
       </body>
     </html>
   );

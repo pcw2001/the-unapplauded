@@ -1,24 +1,19 @@
 # The Unapplauded
 
-一个存放小事的地方。
+> A museum for ordinary victories.
 
-The Unapplauded 是一个安静的个人博物馆，把日常的小事变成展品。
+一个安静的个人博物馆，把日常的小事变成展品。
 
-它不是习惯追踪器，不是励志看板，不是效率工具。它只是一个小地方，让你把今天发生的一件小事收起来。
+写下一件今天发生的小事——给自己煮了一碗面、终于回了那条消息、收拾了桌子——它会被变成一件博物馆展品，放进你的私人收藏。
 
-## 开始
+**[在线演示](https://the-unapplauded.vercel.app)** <!-- TODO: 替换为你的实际 Vercel 地址 -->
 
-```bash
-npm install
-npm run dev
-```
-
-打开 http://localhost:3000。
+---
 
 ## 功能
 
-- 写下一件今天发生的小事（200 字以内）
-- 系统把它变成博物馆展品（标题、展厅、材质、展签、策展人笔记）
+- 写下一件今天的小事（200 字以内）
+- 自动生成博物馆展品（标题、展厅、材质、展签、策展人笔记）
 - 预览展品，不满意可以换一种呈现
 - 保存到个人博物馆墙
 - 点击展品查看完整详情
@@ -40,58 +35,80 @@ npm run dev
 
 未匹配时默认归入「日常秩序厅」。
 
+## 技术栈
+
+- **框架：** Next.js 16 (App Router)
+- **UI：** React 19 + Tailwind CSS v4
+- **语言：** TypeScript
+- **存储：** 浏览器 localStorage
+- **部署：** Vercel
+
+## 本地运行
+
+```bash
+# 克隆仓库
+git clone https://github.com/pcw2001/the-unapplauded.git
+cd the-unapplauded
+
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+```
+
+打开 http://localhost:3000。
+
+## 部署
+
+项目使用 Next.js App Router，所有页面静态预渲染，可直接部署到 Vercel：
+
+```bash
+# 安装 Vercel CLI
+npm i -g vercel
+
+# 登录
+vercel login
+
+# 部署
+vercel
+
+# 部署到生产环境
+vercel --prod
+```
+
+或将 GitHub 仓库连接到 [vercel.com](https://vercel.com)，每次 push 自动部署。
+
 ## 数据存储
 
-所有展品保存在浏览器的 `localStorage` 中，键名为 `the-unapplauded-exhibits`。
+所有展品保存在浏览器的 `localStorage` 中：
 
 - 不需要服务器
 - 不需要登录
 - 不会上传到任何地方
 - 清除浏览器缓存会丢失数据
+- 不同设备、不同浏览器之间的数据不互通
 
-## 技术栈
-
-- Next.js 16 (App Router)
-- React 19
-- TypeScript
-- Tailwind CSS v4
-- localStorage
+这是设计选择——这是一个完全本地的个人空间。
 
 ## 项目结构
 
 ```
 app/
-  layout.tsx          — 根布局（字体、全局样式）
-  page.tsx            — 首页（输入小事）
-  preview/page.tsx    — 展品预览
-  museum/page.tsx     — 博物馆墙 + 详情弹窗 + 删除确认
+  layout.tsx            — 根布局（字体、全局样式、footer）
+  page.tsx              — 首页（输入小事）
+  preview/page.tsx      — 展品预览
+  museum/page.tsx       — 博物馆墙 + 详情弹窗 + 删除确认
+  opengraph-image.tsx   — 动态 OG 分享图片
 lib/
-  storage.ts          — localStorage 读写
-  galleries.ts        — 展厅分类和关键词匹配
-  templates.ts        — 展品文案模板池
-  exhibit-generator.ts — 展品生成（随机组合模板）
+  storage.ts            — localStorage 读写
+  galleries.ts          — 展厅分类和关键词匹配
+  templates.ts          — 展品文案模板池
+  exhibit-generator.ts  — 展品生成（随机组合模板）
 types/
-  exhibit.ts          — 类型定义
+  exhibit.ts            — 类型定义
 docs/
-  MANUAL_QA.md        — 手动测试指南
-```
-
-## 手动测试
-
-详见 [docs/MANUAL_QA.md](docs/MANUAL_QA.md)。
-
-快速流程：
-1. 在首页输入一件小事
-2. 生成展品 → 预览 → 换一种呈现 → 放入博物馆
-3. 在博物馆墙查看 → 点击详情 → 删除确认
-4. 刷新页面，确认数据还在
-
-## 构建
-
-```bash
-npm run build    # 生产构建
-npm start        # 启动生产服务器
-npm run lint     # 代码检查
+  MANUAL_QA.md          — 手动测试指南
 ```
 
 ## 已知限制
@@ -103,39 +120,12 @@ npm run lint     # 代码检查
 - 无深色模式
 - 无跨设备同步
 
-## 部署到 Vercel
-
-所有页面都是静态预渲染的，可以直接部署到 Vercel，无需服务器。
-
-```bash
-# 1. 安装 Vercel CLI（如果没有）
-npm i -g vercel
-
-# 2. 登录
-vercel login
-
-# 3. 部署（首次会引导项目设置）
-vercel
-
-# 4. 部署到生产环境
-vercel --prod
-```
-
-或者将 GitHub 仓库连接到 [vercel.com](https://vercel.com)，每次 push 自动部署。
-
-**公开演示注意事项：**
-- 展品数据存储在访问者的浏览器 localStorage 中
-- 不同设备、不同浏览器之间的数据不互通
-- 清除浏览器缓存会丢失所有数据
-- 这是设计选择，不是 bug
-
 ## 路线图
 
-1. **Vercel 部署** — 线上演示，朋友可以试用
-2. **PWA 支持** — 添加到主屏幕，离线可用
-3. **AI 生成展品** — 可选的 AI 模板，让展品更个性化
-4. **云端同步** — 登录后跨设备保存展品
-5. **应用打包** — Capacitor 打包为原生 App
+1. **v0.4** — 公开展示版：优化首页、空状态、OG 分享、footer
+2. **v0.5** — PWA 支持：添加到主屏幕，离线可用
+3. **v0.6** — AI 生成展品：可选的 AI 模板，让展品更个性化
+4. **v1.0** — 云端同步 + 应用打包
 
 ## License
 

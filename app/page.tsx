@@ -46,12 +46,15 @@ export default function HomePage() {
   return (
     <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
       <div className="max-w-lg sm:max-w-2xl w-full text-center space-y-6 sm:space-y-8 animate-fade-in">
-        <div className="space-y-2">
+        <div className="space-y-3">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-foreground tracking-tight">
             The Unapplauded
           </h1>
           <p className="text-secondary text-base sm:text-lg">
-            一个存放小事的地方
+            A museum for ordinary victories.
+          </p>
+          <p className="text-foreground/70 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+            写下一件今天的小事，它会被变成一件博物馆展品。
           </p>
         </div>
 
@@ -72,7 +75,7 @@ export default function HomePage() {
                 setError("");
               }}
               onKeyDown={handleKeyDown}
-              placeholder="在这里写..."
+              placeholder="比如：给自己煮了一碗面、终于回了那条消息、收拾了桌子……"
               maxLength={200}
               rows={4}
               aria-describedby={error ? "input-error" : undefined}
@@ -97,13 +100,16 @@ export default function HomePage() {
           </button>
         </div>
 
-        <div className="pt-6 sm:pt-8">
+        <div className="pt-6 sm:pt-8 space-y-3">
           <Link
             href="/museum"
             className="text-secondary hover:text-foreground transition-colors duration-200 text-xs sm:text-sm"
           >
             进入博物馆 →
           </Link>
+          <p className="text-secondary/60 text-xs">
+            展品保存在你的浏览器中，不会上传到任何地方。
+          </p>
         </div>
       </div>
     </main>
