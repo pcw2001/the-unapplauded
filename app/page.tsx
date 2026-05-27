@@ -57,7 +57,7 @@ export default function HomePage() {
 
         <div className="space-y-4 sm:space-y-5">
           <p className="text-foreground/80 text-sm sm:text-base">
-            今天有什么事发生了？
+            今天有什么小事，值得被收起来？
           </p>
 
           <div className="relative">
