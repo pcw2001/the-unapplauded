@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { generateExhibit } from "@/lib/exhibit-generator";
@@ -11,15 +11,24 @@ export default function HomePage() {
   const [input, setInput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState("");
+  const inputRef = useRef(input);
   const router = useRouter();
 
+  // Keep ref in sync with state so async handlers always read latest value
+  const updateInput = (value: string) => {
+    inputRef.current = value;
+    setInput(value);
+  };
+
   const handleSubmit = async () => {
-    if (!input.trim()) {
+    const current = inputRef.current.trim();
+
+    if (!current) {
       setError("写点什么吧，哪怕很小的事。");
       return;
     }
 
-    if (input.length > 200) {
+    if (current.length > 200) {
       setError("200字就够了，小事不需要长篇大论。");
       return;
     }
@@ -27,21 +36,18 @@ export default function HomePage() {
     setIsGenerating(true);
     setError("");
 
-    const trimmed = input.trim();
-
     try {
       // Try AI generation first
       const res = await fetch("/api/generate-exhibit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: trimmed }),
+        body: JSON.stringify({ text: current }),
       });
 
       if (res.ok) {
         const data = await res.json();
 
         if (data.source === "ai" && data.exhibit) {
-          // AI generation succeeded
           const exhibit: Exhibit = {
             id: crypto.randomUUID(),
             exhibitNumber: getNextExhibitNumber(),
@@ -53,7 +59,7 @@ export default function HomePage() {
             date: new Date().toISOString().split("T")[0],
             museumLabel: data.exhibit.museumLabel,
             curatorNote: data.exhibit.curatorNote,
-            rawInput: trimmed,
+            rawInput: current,
             createdAt: new Date().toISOString(),
           };
           sessionStorage.setItem("current-exhibit", JSON.stringify(exhibit));
@@ -64,25 +70,18 @@ export default function HomePage() {
       }
 
       // Fallback to local generation
-      const exhibit = generateExhibit(trimmed);
+      const exhibit = generateExhibit(current);
       sessionStorage.setItem("current-exhibit", JSON.stringify(exhibit));
       sessionStorage.setItem("exhibit-fallback", "true");
       router.push("/preview");
     } catch {
       // Fallback to local generation
-      const exhibit = generateExhibit(trimmed);
+      const exhibit = generateExhibit(current);
       sessionStorage.setItem("current-exhibit", JSON.stringify(exhibit));
       sessionStorage.setItem("exhibit-fallback", "true");
       router.push("/preview");
     } finally {
       setIsGenerating(false);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
-      e.preventDefault();
-      handleSubmit();
     }
   };
 
@@ -113,11 +112,8 @@ export default function HomePage() {
             <textarea
               id="achievement-input"
               value={input}
-              onChange={(e) => {
-                setInput(e.target.value);
-                setError("");
-              }}
-              onKeyDown={handleKeyDown}
+              onChange={(e) => updateInput(e.target.value)}
+              onCompositionEnd={(e) => updateInput(e.currentTarget.value)}
               placeholder="比如：给自己煮了一碗面、终于回了那条消息、收拾了桌子……"
               maxLength={200}
               rows={4}
@@ -135,8 +131,9 @@ export default function HomePage() {
           )}
 
           <button
+            type="button"
             onClick={handleSubmit}
-            disabled={isGenerating || !input.trim()}
+            disabled={isGenerating || input.trim().length === 0}
             className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-foreground text-background rounded-lg hover:bg-foreground/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium text-sm sm:text-base"
           >
             {isGenerating ? "正在准备展品..." : "生成展品"}
