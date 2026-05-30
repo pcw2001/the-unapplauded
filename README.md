@@ -2,81 +2,76 @@
 
 > A museum for ordinary victories.
 
-一个安静的个人博物馆，把日常的小事变成展品。
+English | [简体中文](README.zh-CN.md)
 
-写下一件今天发生的小事——给自己煮了一碗面、终于回了那条消息、收拾了桌子——它会被变成一件博物馆展品，放进你的私人收藏。
-
-**[在线演示](https://the-unapplauded.vercel.app)** <!-- TODO: 替换为你的实际 Vercel 地址 -->
+**[Live Demo](https://the-unapplauded.vercel.app)**
 
 ---
 
-## 功能
+## Overview
 
-- 写下一件今天的小事（200 字以内）
-- 自动生成博物馆展品（标题、展厅、材质、展签、策展人笔记）
-- 支持 MiMo AI 生成（可选），无 API key 时自动使用本地模板
-- 预览展品，不满意可以换一种呈现
-- 保存到个人博物馆墙
-- 点击展品查看完整详情
-- 删除展品（有确认提示）
-- 所有数据保存在浏览器 localStorage，无需登录
+The Unapplauded is a personal, browser-only museum for recording everyday victories. Write down a small thing that happened today — cooked a bowl of noodles, finally replied to that message, tidied the desk — and it becomes a museum exhibit in your private collection.
 
-## 展厅分类
+All data stays in your browser's localStorage. No server, no login, no data upload.
 
-输入内容会根据关键词自动归入不同展厅：
+## Features
 
-| 展厅 | 气质 | 触发词示例 |
-|------|------|-----------|
-| 厨房厅 | 烟火气、锅碗、深夜 | 做饭、煮、面条、下厨 |
-| 日常秩序厅 | 灰尘、物件、归位 | 整理、打扫、收拾、拖地 |
-| 休息厅 | 安静、无所事事、下午 | 休息、睡、放松、午休 |
-| 社交勇气厅 | 紧张、笨拙、真实 | 打电话、约、见、回消息 |
-| 自我照料厅 | 牙刷、温水、毛巾 | 洗澡、吃饭、喝水、散步 |
-| 情绪管理厅 | 经过、不评判、安静 | 哭、难过、接受、深呼吸 |
+- Write a short everyday moment (200 characters max)
+- AI-generated museum exhibit: title, gallery, materials, museum label, curator's note
+- MiMo AI integration (optional) — falls back to local templates when no API key is set
+- Preview the exhibit, regenerate for a different presentation
+- Save to your personal museum wall
+- View exhibit details in a modal
+- Delete exhibits with confirmation
+- 6 gallery classifications based on keyword matching
+- PWA installable with offline support
+- Dynamic OpenGraph image for social sharing
 
-未匹配时默认归入「日常秩序厅」。
+## Gallery Classification
 
-## 技术栈
+Input is automatically categorized into one of 6 galleries:
 
-- **框架：** Next.js 16 (App Router)
-- **UI：** React 19 + Tailwind CSS v4
-- **语言：** TypeScript
-- **AI：** MiMo（Xiaomi Token Plan，OpenAI 兼容接口，可选）
-- **存储：** 浏览器 localStorage
-- **部署：** Vercel
-- **PWA：** Web App Manifest + Service Worker
+| Gallery | Character | Example Triggers |
+|---------|-----------|-----------------|
+| Kitchen | Warm, everyday cooking | cook, noodles, kitchen |
+| Daily Order | Tidying, organizing | clean, tidy, organize |
+| Rest | Quiet, doing nothing | rest, sleep, relax |
+| Social Courage | Nervous, real connection | call, meet, reply |
+| Self-Care | Small body kindness | shower, eat, walk |
+| Emotional Management | Non-judgmental presence | cry, sad, accept, breathe |
 
-## 本地运行
+Unmatched input defaults to "Daily Order."
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **UI:** React 19 + Tailwind CSS v4
+- **Language:** TypeScript
+- **AI:** MiMo (Xiaomi Token Plan, OpenAI-compatible, optional)
+- **Storage:** Browser localStorage
+- **Deployment:** Vercel
+- **PWA:** Web App Manifest + Service Worker
+
+## Getting Started
 
 ```bash
-# 克隆仓库
-git clone https://github.com/pcw2001/the-unapplauded.git
+git clone https://github.com/pangchuanwang/the-unapplauded.git
 cd the-unapplauded
-
-# 安装依赖
 npm install
-
-# 启动开发服务器
 npm run dev
 ```
 
-打开 http://localhost:3000。
+Open http://localhost:3000.
 
-不设置 MiMo 环境变量时，应用会使用本地模板生成展品，完全可正常运行。
+The app works fully without any environment variables — local templates are used when MiMo API key is absent.
 
-## AI 生成配置（可选）
+## AI Configuration (Optional)
 
-应用支持使用 MiMo AI 生成更个性化的展品文案。不配置时自动使用本地模板。
-
-### 本地开发
-
-复制 `.env.example` 为 `.env.local`，填入你的 API key：
+Copy `.env.example` to `.env.local` and fill in your API key:
 
 ```bash
 cp .env.example .env.local
 ```
-
-编辑 `.env.local`：
 
 ```
 MIMO_API_KEY=your-api-key-here
@@ -84,121 +79,62 @@ MIMO_BASE_URL=https://token-plan-cn.xiaomimimo.com/v1
 MIMO_MODEL=mimo-v2.5-pro
 ```
 
-**重要：** 不要使用 `NEXT_PUBLIC_` 前缀。API key 只在服务端使用，不会暴露给浏览器。
+**Important:** Do NOT use the `NEXT_PUBLIC_` prefix. The API key is server-side only.
 
-### Vercel 部署
+## Deployment
 
-在 Vercel 项目设置中添加环境变量：
-
-- `MIMO_API_KEY` — 你的 MiMo API key
-- `MIMO_BASE_URL` — `https://token-plan-cn.xiaomimimo.com/v1`
-- `MIMO_MODEL` — `mimo-v2.5-pro`
-
-添加后重新部署即可生效。
-
-### 行为说明
-
-- 有 API key 时：调用 MiMo AI 生成展品文案
-- 无 API key 时：使用本地随机模板生成（默认行为）
-- API 调用失败时：自动回退到本地模板，并显示提示"这次先用本地展签生成。"
-- 用户输入的小成就会发送到 MiMo API（仅在 AI 生成启用时）
-- 已保存的展品始终在浏览器 localStorage 中，不依赖 AI 服务
-
-## 部署
-
-项目使用 Next.js App Router，所有页面静态预渲染，可直接部署到 Vercel：
+Deploy to Vercel with one click, or via CLI:
 
 ```bash
-# 安装 Vercel CLI
 npm i -g vercel
-
-# 登录
 vercel login
-
-# 部署
-vercel
-
-# 部署到生产环境
 vercel --prod
 ```
 
-或将 GitHub 仓库连接到 [vercel.com](https://vercel.com)，每次 push 自动部署。
+Or connect the GitHub repo to [vercel.com](https://vercel.com) for automatic deployments on push.
 
-## PWA
-
-The Unapplauded 支持作为 PWA 安装到主屏幕：
-
-- **iOS Safari：** 分享按钮 → 添加到主屏幕
-- **Android Chrome：** 菜单 → 安装应用
-- **桌面 Chrome：** 地址栏右侧的安装图标
-
-安装后可以像原生应用一样打开，有独立的启动画面和图标。
-
-v0.5.1 增加了 PNG 图标回退，提升各浏览器 PWA 兼容性。
-v0.6 增加了基础 Service Worker 离线支持——应用外壳可以离线加载。
-
-离线支持范围有限：应用页面和静态资源可离线访问，但创建新展品需要网络连接。已保存的展品始终在浏览器 localStorage 中，不依赖网络。
-
-详细的安装验证和离线测试步骤见 [docs/PWA_CHECKLIST.md](docs/PWA_CHECKLIST.md)。
-
-## 数据存储
-
-所有展品保存在浏览器的 `localStorage` 中：
-
-- 不需要服务器
-- 不需要登录
-- 不会上传到任何地方
-- 清除浏览器缓存会丢失数据
-- 不同设备、不同浏览器之间的数据不互通
-
-这是设计选择——这是一个完全本地的个人空间。
-
-## 项目结构
+## Project Structure
 
 ```
 app/
-  layout.tsx            — 根布局（字体、全局样式、footer）
-  manifest.ts           — PWA manifest
-  page.tsx              — 首页（输入小事）
-  preview/page.tsx      — 展品预览
-  museum/page.tsx       — 博物馆墙 + 详情弹窗 + 删除确认
-  opengraph-image.tsx   — 动态 OG 分享图片
-  api/
-    generate-exhibit/
-      route.ts          — MiMo AI 展品生成 API
+  layout.tsx              — Root layout (fonts, global styles, footer)
+  manifest.ts             — PWA manifest
+  page.tsx                — Home page (write a moment)
+  preview/page.tsx        — Exhibit preview
+  museum/page.tsx         — Museum wall + detail modal + delete
+  opengraph-image.tsx     — Dynamic OG share image
+  api/generate-exhibit/
+    route.ts              — MiMo AI exhibit generation API
 components/
-  service-worker-register.tsx — Service Worker 注册
+  service-worker-register.tsx
 lib/
-  storage.ts            — localStorage 读写
-  galleries.ts          — 展厅分类和关键词匹配
-  templates.ts          — 展品文案模板池
-  exhibit-generator.ts  — 展品生成（本地随机模板）
+  storage.ts              — localStorage read/write
+  galleries.ts            — Gallery classification + keyword matching
+  templates.ts            — Exhibit text template pool
+  exhibit-generator.ts    — Exhibit generation (local random templates)
 types/
-  exhibit.ts            — 类型定义
-docs/
-  MANUAL_QA.md          — 手动测试指南
-  PWA_CHECKLIST.md      — PWA 安装验证清单
-.env.example            — 环境变量模板
+  exhibit.ts              — Type definitions
 ```
 
-## 已知限制
+## Highlights
 
-- 数据仅存在于当前浏览器，清除缓存会丢失所有展品
-- 不支持导出展品
-- 不支持编辑已保存的展品
-- AI 生成需要 MiMo API key，无 key 时使用本地模板
-- 用户输入的小成就会发送到 MiMo API（仅在 AI 启用时）
-- 无深色模式
-- 无跨设备同步
+- **Graceful AI fallback**: Works perfectly without API keys; local templates produce high-quality exhibit text
+- **Accessible modals**: Focus trapping, Escape key close, ARIA roles, keyboard navigation
+- **PWA with offline support**: Service Worker caches the app shell; saved exhibits are always available
+- **Zero data collection**: All data stays in the browser — no analytics, no tracking, no server
+- **Curated gallery system**: 6 themed galleries with keyword-based classification for meaningful categorization
+- **Dynamic social sharing**: Edge-runtime generated OpenGraph images for rich link previews
 
-## 路线图
+## Roadmap
 
-1. **v0.4** — 公开展示版：优化首页、空状态、OG 分享、footer
-2. **v0.5** — PWA 基础：manifest、图标、可安装到主屏幕
-3. **v0.5.1** — PWA 兼容性：PNG 图标回退、安装验证清单
-4. **v0.6** — 离线支持：Service Worker 缓存应用外壳
-5. **v0.7** — AI 生成展品：MiMo AI 可选集成，本地模板兜底
-6. **v1.0** — 云端同步 + 应用打包
+- v0.7: AI exhibit generation with MiMo integration
+- v1.0: Cloud sync + app packaging
+- Future: Export functionality, dark mode, cross-device sync
+
+## Author
+
+Chuanwang Pang
+GitHub: [github.com/pangchuanwang](https://github.com/pangchuanwang)
 
 ## License
 
